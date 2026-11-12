@@ -1,0 +1,1 @@
+fis_obj = readfis("data\fuzzy_rules.fis");
