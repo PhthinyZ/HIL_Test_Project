@@ -1,0 +1,45 @@
+# =========================
+# Python 3.10 / Conda 缓存
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+.conda/
+.env/
+venv/
+env/
+
+# =========================
+# Pytest 测试框架缓存
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+test_results.xml
+
+# =========================
+# Matlab 2024b / Simulink 缓存
+# =========================
+# 编译与仿真缓存
+slprj/
+*.slxc
+*.mexw64
+*.mexw32
+
+# 自动保存与备份文件
+*.asv
+*.slx.autosave
+*.slx.r*
+*.bak
+
+# Matlab Project (2024b) 自动生成的本地缓存
+resources/project/*
+!resources/project/Root.type.Files
+!resources/project/Root.type.Preferences
+
+# =========================
+# 本地测试数据、日志与环境配置
+# =========================
+*.mat
+*.log
+data/large_dataset.csv
