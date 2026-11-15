@@ -1,4 +1,39 @@
 % ===============================
+%   V3.0
+% ===============================
+% 注意：输出参数变成了三个纯数组：时间 t_out，电压 vout_data，电流 i_ind_data
+function [t_out, vout_data, i_ind_data] = run_buck_sim(T_sim, vin_time, vin_value, load_time, load_value)
+    % 1. 读取模糊规则
+    fis_obj = readfis('data\fuzzy_rules.fis');
+    assignin('base', 'fuzzy_rules', fis_obj);
+
+    % 2. 构造 Dataset 并注入
+    vin_ts = timeseries(vin_value, vin_time);
+    load_ts = timeseries(load_value, load_time);
+
+    Input_Signals = Simulink.SimulationData.Dataset();
+    Input_Signals = Input_Signals.addElement(vin_ts, 'Vin_in');
+    Input_Signals = Input_Signals.addElement(load_ts, 'Load_g_in');
+    assignin('base', 'Input_Signals', Input_Signals);
+
+    % 3. 运行仿真
+    model_name = 'plant_model'; 
+    load_system(model_name);
+    
+    simIn = Simulink.SimulationInput(model_name);
+    simIn = simIn.setModelParameter('StopTime', num2str(T_sim));
+    sim_out = sim(simIn);
+    
+    % 4. 【新增】在 MATLAB 内部把复杂对象解包成一维纯数字数组，再发给 Python
+    vout_obj = sim_out.yout.getElement('Vout_out').Values;
+    i_ind_obj = sim_out.yout.getElement('I_ind_out').Values;
+    
+    t_out      = vout_obj.Time;
+    vout_data  = vout_obj.Data;
+    i_ind_data = i_ind_obj.Data;
+end
+
+% ===============================
 %   V1.0
 % ===============================
 % function sim_out = run_buck_sim(T_sim, vin_time, vin_value, load_time, load_value)
@@ -87,39 +122,3 @@
 % 
 %     sim_out = sim(simIn);
 % end
-
-
-% ===============================
-%   V3.0
-% ===============================
-% 注意：输出参数变成了三个纯数组：时间 t_out，电压 vout_data，电流 i_ind_data
-function [t_out, vout_data, i_ind_data] = run_buck_sim(T_sim, vin_time, vin_value, load_time, load_value)
-    % 1. 读取模糊规则
-    fis_obj = readfis('data\fuzzy_rules.fis');
-    assignin('base', 'fuzzy_rules', fis_obj);
-
-    % 2. 构造 Dataset 并注入
-    vin_ts = timeseries(vin_value, vin_time);
-    load_ts = timeseries(load_value, load_time);
-
-    Input_Signals = Simulink.SimulationData.Dataset();
-    Input_Signals = Input_Signals.addElement(vin_ts, 'Vin_in');
-    Input_Signals = Input_Signals.addElement(load_ts, 'Load_g_in');
-    assignin('base', 'Input_Signals', Input_Signals);
-
-    % 3. 运行仿真
-    model_name = 'plant_model'; 
-    load_system(model_name);
-    
-    simIn = Simulink.SimulationInput(model_name);
-    simIn = simIn.setModelParameter('StopTime', num2str(T_sim));
-    sim_out = sim(simIn);
-    
-    % 4. 【新增】在 MATLAB 内部把复杂对象解包成一维纯数字数组，再发给 Python
-    vout_obj = sim_out.yout.getElement('Vout_out').Values;
-    i_ind_obj = sim_out.yout.getElement('I_ind_out').Values;
-    
-    t_out      = vout_obj.Time;
-    vout_data  = vout_obj.Data;
-    i_ind_data = i_ind_obj.Data;
-end

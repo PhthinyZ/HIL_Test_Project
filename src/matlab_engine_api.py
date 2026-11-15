@@ -1,37 +1,9 @@
-"""
-import matlab.engine
-
-eng = matlab.engine.start_matlab()
-
-# 传入 0-0.1s 的仿真时间，以及阶跃的电压和负载参数
-result = eng.run_buck_sim(0.1, 
-                          matlab.double([0, 0.03, 0.03, 0.05, 0.05, 0.1]), 
-                          matlab.double([16, 16, 20, 20, 16, 16]),
-                          matlab.double([0, 0.02, 0.02, 0.1]),
-                          matlab.double([1, 1, 0, 0]))
-"""
-
 import matlab.engine
 import numpy as np
 import time
 
 class BuckSimEngine:
-    """
-    def __init__(self):
-        
-        #初始化并启动 MATLAB 引擎。
-        #这一步通常需要十几秒，建议在网络服务端启动时或 Pytest 的 fixture 里全局执行一次。
-        
-        print("[System] 正在启动 MATLAB 引擎，请稍候...")
-        start_time = time.time()
-        self.eng = matlab.engine.start_matlab()
-        print(f"[System] MATLAB 引擎启动成功! 耗时: {time.time() - start_time:.2f}s")
-        
-        # 可选：如果你的 python 执行路径不在项目根目录，可以强制让 MATLAB cd 过去
-        # import os
-        # root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        # self.eng.cd(root_dir, nargout=0)
-    """
+   
     def __init__(self):
         """
         #初始化并启动 MATLAB 引擎。
@@ -40,7 +12,8 @@ class BuckSimEngine:
         print("[System] 正在启动 MATLAB 引擎，请稍候...")
         start_time = time.time()
         self.eng = matlab.engine.start_matlab()
-        print(f"[System] MATLAB 引擎启动成功! 耗时: {time.time() - start_time:.2f}s")
+        print(f"[System] MATLAB 引擎启动成功! ")
+        #print(f"[System] MATLAB 引擎启动成功! 耗时: {time.time() - start_time:.2f}s")
         
         import os
         # 1. 动态获取项目的根目录 (当前文件 src 的上一级)
@@ -61,7 +34,8 @@ class BuckSimEngine:
         """
         调用 MATLAB 端的 run_buck_sim.m 进行仿真
         """
-        print(f"[Engine] 收到仿真任务，正在下发参数 (时长: {T_sim}s)...")
+        print(f"[Engine] 收到仿真任务，正在下发参数...")
+        #print(f"[Engine] 收到仿真任务，正在下发参数 (时长: {T_sim}s)...")
         print("[Engine] 【仿真运行中，请稍候】")
         
         # 1. 类型转换：将 Python 的 list 转换为 matlab.double，这是引擎通信的强制要求
@@ -105,7 +79,7 @@ if __name__ == '__main__':
     engine = BuckSimEngine()
     
     try:
-        # 构造和你在 MATLAB 里一样的测试用例
+        # 构造在 MATLAB 里的测试用例
         T_sim = 0.1
         vin_time = [0.0, 0.03, 0.03, 0.05, 0.05, 0.1]
         vin_value = [16.0, 16.0, 20.0, 20.0, 16.0, 16.0]
@@ -125,17 +99,20 @@ if __name__ == '__main__':
         print(f"稳态最终电压: {vout_array[-1]:.2f} V")
         print("--------------------\n")
         
-        # 如果你想在 Python 里画图，取消下面几行的注释并确保装了 matplotlib
-        """
-        import matplotlib.pyplot as plt
-        plt.plot(result['time'], result['vout'])
-        plt.title('Buck Converter Output Voltage (Python Plot)')
-        plt.xlabel('Time (s)')
-        plt.ylabel('Voltage (V)')
-        plt.grid(True)
-        plt.show()
-        """
-        
     finally:
         # 确保无论是否报错，引擎都会被正常关闭
         engine.close()
+
+
+"""
+import matlab.engine
+
+eng = matlab.engine.start_matlab()
+
+# 传入 0-0.1s 的仿真时间，以及阶跃的电压和负载参数
+result = eng.run_buck_sim(0.1, 
+                          matlab.double([0, 0.03, 0.03, 0.05, 0.05, 0.1]), 
+                          matlab.double([16, 16, 20, 20, 16, 16]),
+                          matlab.double([0, 0.02, 0.02, 0.1]),
+                          matlab.double([1, 1, 0, 0]))
+"""

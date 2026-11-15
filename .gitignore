@@ -43,3 +43,6 @@ resources/project/*
 *.mat
 *.log
 data/large_dataset.csv
+report.html
+logs/
+test_reports/
