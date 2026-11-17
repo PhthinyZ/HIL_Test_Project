@@ -113,6 +113,8 @@ conda activate py310
 ```text
 .
 ├── models/                               Simulink models (DC_DC_Buck_Fuzzy.slx) and MATLAB init scripts
+├── src/                                  Folder for Matlab scripts and python api
+│   └── matlab_engine_api.py              Matlab engine api to boost Matlab and Simulink
 ├── tests/                                PyTest execution scripts, DDT fixtures, and assertion logic
 │   ├── test_data.py                      Test matrix and boundary conditions configurations
 │   └── test_test_buck_robustness.py      Core test execution and metric evaluation logic
