@@ -1,8 +1,23 @@
 # DC-DC Fuzzy Control MIL Automation Test Framework Based on Pytest and Simulink
 
-This is an end-to-end, local automated engineering test platform designed to transform the traditional verification of power electronic control algorithms into reproducible automated test cases based on  "model-in-the-loop" (MIL) methodologies.
+This is a local **automation test platform** designed to transform the traditional verification of **power electronics** control algorithms into reproducible automated test cases based on  **model-in-the-loop (MIL)** methodologies, with the tools of **Pytest** and **MATLAB/Simulink**.
 
-The project integrates a high-fidelity virtual plant model of a DC-DC buck converter, a custom fuzzy logic controller, mechanisms for injecting boundary conditions and disturbances, and automated evaluation of electrical timing and quality metrics (such as overshoot and steady-state error). It leverages the PyTest and Matplotlib ecosystem for testing. The platform enables precise control and data exchange between a Python-based master test controller and the underlying physical solver. Furthermore, its architecture incorporates standardized interfaces to facilitate future migration to actual physical hardware—such as by controlling programmable power supplies via PyVISA—or to hardware-in-the-loop (HIL) systems.
+> **Skills shown:** firmware test automation (Python/pytest) · MIL (Model-in-the-Loop) · cross-language scheduling (MATLAB Engine API) · data-driven testing (DDT) · Simulink modeling · fuzzy logic control (FLC) · power electronics (DC-DC converter) · boundary condition verification · telemetry data analysis (Numpy/Pandas) · automated test assertions
+
+## How it fits together
+
+```mermaid
+graph LR
+    %% Define node styles (mimicking the light-purple background and dark border style seen in the reference image)
+    classDef default fill:#f3e8ff,stroke:#a855f7,stroke-width:1.5px,color:#1f2937,font-family:sans-serif;
+    classDef edgeLabel fill:#ffffff,stroke:none,color:#6b7280,font-size:12px;
+
+    %% Define nodes and data flow
+    A[Requirements & DDT<br>PyTest Parametrize<br>7 Scenarios] -->|Parameters| B[MIL Injection<br>MATLAB Engine API<br>Workspace Mapping]
+    B -->|eng.sim| C[Virtual Plant<br>Simulink DC-DC<br>Fuzzy Controller]
+    C -->|Timeseries| D[Data Extraction<br>Simulink Outports<br>Double to Numpy]
+    D -->|Evaluate| E[Automated Asserts<br>Overshoot & SS Error<br>HTML Reports]
+```
 
 ## Why this project exists
 
